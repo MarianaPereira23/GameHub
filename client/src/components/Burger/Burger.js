@@ -1,33 +1,28 @@
 /* eslint-disable no-unused-expressions */
-import React, { useState, useEffect } from 'react';
+import React, { useState } from 'react';
 import './Burger.css';
 
 const Burger = () => {
+  const [isMounted, setMounted] = useState(false);
   const [displayMenu, setDisplayMenu] = useState(false);
-  const [onLoadSetter, setOnLoadSetter] = useState(false);
+  const [hamburgerOpen, setHamburgerOpen] = useState(false);
 
-  useEffect(() => {
-    setOnLoadSetter(true)
-    console.log(onLoadSetter);
-  }, [])
-
-  const handleClick = e => {
-    const classes = e.target.closest('div').classList;
-    classes.toggle('active');
-    classes.toggle('not-active');
+  const toggleHamburger = () =>{
+    setMounted(true);
+    setHamburgerOpen(!hamburgerOpen);
     setDisplayMenu(!displayMenu);
   };
 
   return (
     <div className="page-header__burger">
-      <div className="burger__burger-icon">
-        <div className="burger-icon__button not-active" onClick={handleClick}>
+      <div className="burger__burger-icon" onClick={toggleHamburger}>
+        <div className={`burger-icon__button ${isMounted ? `${hamburgerOpen ? "active" : "not-active"}` : ""}`} >
           <span className="button__line"></span>
           <span className="button__line"></span>
           <span className="button__line"></span>
         </div>
       </div>
-      <div className={`burger__menu ${displayMenu ? "show" : "hide"} ${onLoadSetter ? "" : "hidden"}`}>
+      <div className={`burger__menu ${isMounted ? "" : "hidden"} ${displayMenu ? "show" : "hide"}`}>
         <ul className="menu__list">
           <li>Action</li>
           <li>Fantasy</li>
