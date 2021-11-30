@@ -1,4 +1,10 @@
-@import url('https://fonts.googleapis.com/css2?family=Orbitron&display=swap');
+@import url("https://fonts.googleapis.com/css2?family=Orbitron&display=swap");
+
+.page-header__logo-link {
+  text-decoration: none;
+  display: flex;
+  align-items: center;
+}
 
 .page-header__logo-container {
   display: flex;
@@ -12,8 +18,8 @@
 }
 
 .logo-container__logo-title {
-  font-family: 'Orbitron', sans-serif;
-	font-size: 1.5rem;
-	color: #B10002;
-	margin-right: 0.3rem;
+  font-family: "Orbitron", sans-serif;
+  font-size: 1.5rem;
+  color: #b10002;
+  margin-right: 0.3rem;
 }

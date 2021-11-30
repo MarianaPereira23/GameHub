@@ -1,6 +1,6 @@
 .search-bar {
   width: 100%;
-  border: 1px solid #B10002;
+  border: 1px solid #b10002;
   border-radius: 4px;
   margin-top: 1rem;
 }
@@ -10,6 +10,10 @@
   background-color: transparent;
   color: #fff;
   padding: 0.3rem 0.7rem 0.3rem 0.3rem;
+}
+
+.submit-button__icon {
+  cursor: pointer;
 }
 
 .search-bar__input-field {

@@ -6,11 +6,11 @@ import './UserButton.css';
 
 const UserButton = () => {
   return (
-    <Link to="/login">
-      <button className="page-header__user-button">
+    <button className="page-header__user-button">
+      <Link to="/login">
         <FontAwesomeIcon icon={faSignInAlt} className="user-button__icon" />
-      </button>
-    </Link>
+      </Link>
+    </button>
   );
 };
 

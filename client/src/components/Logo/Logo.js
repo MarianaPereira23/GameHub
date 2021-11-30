@@ -5,12 +5,12 @@ import './Logo.css';
 
 const Logo = () => {
   return (
-    <Link to="/">
-      <div className="page-header__logo-container">
+    <div className="page-header__logo-container">
+      <Link to="/" className="page-header__logo-link">
         <img className="logo-container__logo-image" src={logoImage} alt="GameHub logo" />
         <h1 className="logo-container__logo-title">GameHub</h1>
-      </div>
-    </Link>
+      </Link>
+    </div>
   );
 };
 
