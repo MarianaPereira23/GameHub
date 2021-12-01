@@ -3,6 +3,7 @@
   height: 100%;
   padding-left: 0.5rem;
   display: flex;
+  z-index: 1000;
 }
 
 .burger__burger-icon {
@@ -144,24 +145,22 @@
 .burger__menu {
   position: absolute;
   background-color: rgba(0, 0, 0, 0.7);
+  height: 100vh;
   width: 40vw;
-  padding: 4rem 0.5rem 0.5rem;
+  padding: 4rem 0 0;
   top: 0;
   left: 0;
+  overflow: scroll;
+}
+
+.menu__title {
+  font-size: 1.2rem;
+  margin-bottom: 1.5rem;
 }
 
 .menu__list {
   list-style: none;
 }
-
-.menu__list li {
-  padding-bottom: 0.8rem;
-}
-
-.menu__list li:last-child {
-  padding-bottom: 0;
-}
-
 
 .show {
   animation: ease .7s show-animation forwards;

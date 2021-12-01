@@ -62,6 +62,28 @@ export const getHomeData = async (req, res) => {
   res.status(200).send([popularGames, topRatedGames]);
 };
 
+export const getGenres = async (req, res) => {
+  const genres = await axios.get(`${baseUrlRAWG}genres?key=${process.env.RAWG_KEY}`);
+  const categories = genres.data.results.map(genre => {
+    return ({
+      name: genre.name,
+      image: genre.image_background,
+      id: genre.id,
+    })
+  });
+  res.send(categories);
+}
+
+export const getGameByGenre = async (req, res) => {
+  const { id } = req.params;
+  const data = await axios.get(`${baseUrlRAWG}games?genres=${id}&page=1&page_size=20&key=${process.env.RAWG_KEY}`);
+  const result = data.data.results.map(game => {
+    return({
+      name: game.name,
+      background_image: game.background_image,
+    })});
+  res.send(result);
+}
 
 // export const getGameIgdb = async (req, res) => {
 //   const accessToken = await axios.post(`https://id.twitch.tv/oauth2/token?client_id=${process.env.IGDB_CLIENT_ID}&client_secret=${process.env.IGDB_CLIENT_SECRET}&grant_type=client_credentials`);

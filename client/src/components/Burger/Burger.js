@@ -1,16 +1,28 @@
-import React, { useState } from 'react';
+import React, { useState, useEffect } from 'react';
+import BurgerItem from '../BurgerItem/BurgerItem';
+import axios from 'axios';
 import './Burger.css';
 
 const Burger = () => {
   const [isMounted, setMounted] = useState(false);
   const [displayMenu, setDisplayMenu] = useState(false);
   const [burgerOpen, setBurgerOpen] = useState(false);
+  const [genres, setGenres] = useState([]);
 
   const toggleBurger = () =>{
     setMounted(true);
     setBurgerOpen(!burgerOpen);
     setDisplayMenu(!displayMenu);
   };
+
+  const fetchGenres = async () => {
+    const data = await axios.get('http://localhost:4000/api/genres');
+    setGenres(data.data);
+  };
+
+  useEffect(() => {
+    fetchGenres();
+  }, [])
 
   return (
     <div className="page-header__burger">
@@ -22,11 +34,9 @@ const Burger = () => {
         </div>
       </div>
       <div className={`burger__menu ${!isMounted && "hidden"} ${displayMenu ? "show" : "hide"}`}>
+        <h2 className="menu__title">Categories</h2>
         <ul className="menu__list">
-          <li>Action</li>
-          <li>Fantasy</li>
-          <li>Adventure</li>
-          <li>Simulation</li>
+          {genres.map(genre => <BurgerItem key={genre.name} genre={genre} />)}
         </ul>
       </div>
     </div>

@@ -8,7 +8,7 @@ const Home = () => {
   const [topRatedGames, setTopRatedGames] = useState([]);
   
   const handleOnLoad = async () => {
-    const data = await axios.get(`http://localhost:4000/api/home`);
+    const data = await axios.get('http://localhost:4000/api/home');
     setPopularGames(data.data[0].results);
     setTopRatedGames(data.data[1].results);
   }

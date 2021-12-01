@@ -1,12 +1,14 @@
 import React from 'react';
 import { useSelector } from 'react-redux';
+import { useParams } from 'react-router-dom';
 import GameCard from '../GameCard/GameCard';
 import './Results.css';
 
 const Results = () => {
-  const searchQuery = useSelector(state => state.query.query);
   const searchResults = useSelector(state => state.searchResults.searchResults);
   console.log(searchResults);
+
+  const { query } = useParams();
 
   const renderResults = (result) => {
     if (typeof result === "string") {
@@ -19,7 +21,7 @@ const Results = () => {
 
   return (
     <div className="page-content__results">
-      <h2 className="results__search">Search for: {searchQuery}</h2>
+      <h2 className="results__search">Search for: {query}</h2>
       {renderResults(searchResults)}
     </div>
   );
