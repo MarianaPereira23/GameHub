@@ -19,21 +19,27 @@ const GameDetails = () => {
 
   console.log(gameInfo);
 
+  const createMarkup = () => {
+    return {__html: gameInfo[0].description}
+  }
+
   return (
     <div className="page-content__game-container">
       {gameInfo.length === 0 && <p>Loading...</p>}
       {gameInfo.length > 0 && (
         <>
           <img className="game-container__image" src={gameInfo[2] ? gameInfo[2].image : gameInfo[0].background} alt={gameInfo[0].name}/>
-          <h2 className="game-container__name">{gameInfo[0].name}</h2>
-          <p className="game-container__info">{gameInfo[0].description}</p>
-          <p className="game-container__info">{gameInfo[0].year}</p>
-          <p className="game-container__info">{gameInfo[0].platforms}</p>
-          <p className="game-container__info">{gameInfo[0].genres}</p>
-          {/* <p>{gameInfo[2].videos}</p> */}
-          <p className="game-container__info">{gameInfo[1] && gameInfo[1].gameplayMain}</p>
-          <p className="game-container__info">{gameInfo[1] && gameInfo[1].gameplayMainExtra}</p>
-          <p className="game-container__info">{gameInfo[1] && gameInfo[1].gameplayCompletionist}</p>
+          <div className="game-container__details">
+            <h2 className="details__name">{gameInfo[0].name}</h2>
+            <div className="details__info" id="description" dangerouslySetInnerHTML={createMarkup()} />
+            <p className="details__info">Release date: {gameInfo[0].year}</p>
+            <p className="details__info">Platforms: {gameInfo[0].platforms}</p>
+            <p className="details__info">Genres: {gameInfo[0].genres}</p>
+            {/* <p>{gameInfo[2].videos}</p> */}
+            <p className="details__info">Main Story: {gameInfo[1] && gameInfo[1].gameplayMain}h</p>
+            <p className="details__info">Main Story + Extras: {gameInfo[1] && gameInfo[1].gameplayMainExtra}h</p>
+            <p className="details__info">Completionist: {gameInfo[1] && gameInfo[1].gameplayCompletionist}h</p>
+          </div>
         </>
       
       
