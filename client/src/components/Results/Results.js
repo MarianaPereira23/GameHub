@@ -6,7 +6,6 @@ import './Results.css';
 
 const Results = () => {
   const searchResults = useSelector(state => state.searchResults.searchResults);
-  console.log(searchResults);
 
   const { query } = useParams();
 

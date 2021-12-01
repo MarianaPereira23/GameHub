@@ -87,35 +87,50 @@ export const getGameByGenre = async (req, res) => {
   res.send(result);
 };
 
-// export const getGameIgdb = async (req, res) => {
-//   const accessToken = await axios.post(`https://id.twitch.tv/oauth2/token?client_id=${process.env.IGDB_CLIENT_ID}&client_secret=${process.env.IGDB_CLIENT_SECRET}&grant_type=client_credentials`);
+const getGame = async name => {
+  const accessToken = await axios.post(`https://id.twitch.tv/oauth2/token?client_id=${process.env.IGDB_CLIENT_ID}&client_secret=${process.env.IGDB_CLIENT_SECRET}&grant_type=client_credentials`);
 
-//   const data = await axios({
-//     url: "https://api.igdb.com/v4/games",
-//     method: 'POST',
-//     headers: {
-//         'Accept': 'application/json',
-//         'Client-ID': process.env.IGDB_CLIENT_ID,
-//         'Authorization': `Bearer ${accessToken.data.access_token}`,
-//     },
-//     data: `search "skyrim"; fields name,summary,cover,videos;`
-//     });
+  const data = await axios({
+    url: "https://api.igdb.com/v4/games",
+    method: 'POST',
+    headers: {
+        'Accept': 'application/json',
+        'Client-ID': process.env.IGDB_CLIENT_ID,
+        'Authorization': `Bearer ${accessToken.data.access_token}`,
+    },
+    data: `search "${name}"; fields name,summary,cover,videos;`
+    });
 
-//   res.send(data.data[0]);
-// };
+  return data.data[0];
+};
 
-// export const getGameHowLong = async (req, res) => {
-//   //const { searchQuery } = req.body;
-//   const searchQuery = 'skyrim';
-//   const data = await hltbService.search(`${searchQuery}`);
-//   const results = data.sort((a, b) => b.similarity - a.similarity)
-//                       .map(game => {
-//                         return({
-//                           name: game.name,
-//                           gameplayMain: game.gameplayMain,
-//                           gameplayMainExtra: game.gameplayMainExtra,
-//                           gameplayCompletionist: game.gameplayCompletionist,
-//                         })
-//                       });
-//   res.send(results);
-// };
+const getGameHowLong = async name => {
+  const data = await hltbService.search(`${name}`);
+  const results = data.sort((a, b) => b.similarity - a.similarity)
+                      .map(game => {
+                        return({
+                          gameplayMain: game.gameplayMain,
+                          gameplayMainExtra: game.gameplayMainExtra,
+                          gameplayCompletionist: game.gameplayCompletionist,
+                        })
+                      })[0];
+  return results;
+};
+
+export const getGameInfo = async (req, res) => {
+  const { id } = req.params;
+  const dataRAWG = await axios.get(`${baseUrlRAWG}games/${id}?&key=${process.env.RAWG_KEY}`);
+
+  const resultsRAWG = {
+    name: dataRAWG.data.name,
+    description: dataRAWG.data.description,
+    year: dataRAWG.data.released,
+    genres: dataRAWG.data.genres.map(genre => genre.name),
+    platforms: dataRAWG.data.platforms.map(platform => platform.platform.name)
+  }
+  
+  // const dataIGDB = await getGame(dataRAWG.data.name);
+  // const dataHLTB = await getGameHowLong(dataRAWG.data.name);
+  // console.log(data);
+  res.send(resultsRAWG);
+}
