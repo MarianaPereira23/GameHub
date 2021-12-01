@@ -98,14 +98,50 @@ const getGame = async name => {
         'Client-ID': process.env.IGDB_CLIENT_ID,
         'Authorization': `Bearer ${accessToken.data.access_token}`,
     },
-    data: `search "${name}"; fields name,summary,cover,videos;`
-    });
+    data: `search "${name}"; fields artworks,videos;`
+  });
 
-  return data.data[0];
+  const game = data.data[0];
+
+  if (!game) {
+    return;
+  }
+
+  if (!game.artworks && !game.videos) {
+    return;
+  }
+  
+  if (game.artworks) {
+    const imageData = await axios({
+      url: `https://api.igdb.com/v4/artworks`,
+      method: 'POST',
+      headers: {
+          'Accept': 'application/json',
+          'Client-ID': process.env.IGDB_CLIENT_ID,
+          'Authorization': `Bearer ${accessToken.data.access_token}`,
+      },
+      data: `fields url; where id=${game.artworks[0].toString()};`
+    })
+    game.image = imageData.data[0].url.replace('t_thumb', 't_screenshot_med');
+  }
+
+  if (!game.videos) {
+    game.videos = 'none';
+  };
+
+  return game;
 };
 
 const getGameHowLong = async name => {
-  const data = await hltbService.search(`${name}`);
+  const pattern = /(\([0-9]{4}\))/g;
+  let updatedName = name;
+
+  if (pattern.test(name)) {
+    updatedName = name.replace(pattern, '');
+  };
+
+
+  const data = await hltbService.search(`${updatedName}`);
   const results = data.sort((a, b) => b.similarity - a.similarity)
                       .map(game => {
                         return({
@@ -123,14 +159,15 @@ export const getGameInfo = async (req, res) => {
 
   const resultsRAWG = {
     name: dataRAWG.data.name,
-    description: dataRAWG.data.description,
     year: dataRAWG.data.released,
     genres: dataRAWG.data.genres.map(genre => genre.name),
-    platforms: dataRAWG.data.platforms.map(platform => platform.platform.name)
+    platforms: dataRAWG.data.platforms.map(platform => platform.platform.name),
+    description: dataRAWG.data.description,
+    background: dataRAWG.data.background_image,
   }
   
-  // const dataIGDB = await getGame(dataRAWG.data.name);
-  // const dataHLTB = await getGameHowLong(dataRAWG.data.name);
-  // console.log(data);
-  res.send(resultsRAWG);
+  const dataIGDB = await getGame(resultsRAWG.name);
+  const dataHLTB = await getGameHowLong(resultsRAWG.name);
+
+  res.send([resultsRAWG, dataHLTB, dataIGDB]);
 }
