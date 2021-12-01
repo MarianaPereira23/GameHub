@@ -12,6 +12,7 @@ const getGamesInfo = async name => {
     return({
       name: game.name,
       background_image: game.background_image,
+      id: game.id,
     })});
   return result;
 };
@@ -72,7 +73,7 @@ export const getGenres = async (req, res) => {
     })
   });
   res.send(categories);
-}
+};
 
 export const getGameByGenre = async (req, res) => {
   const { id } = req.params;
@@ -81,9 +82,10 @@ export const getGameByGenre = async (req, res) => {
     return({
       name: game.name,
       background_image: game.background_image,
+      id: game.id,
     })});
   res.send(result);
-}
+};
 
 // export const getGameIgdb = async (req, res) => {
 //   const accessToken = await axios.post(`https://id.twitch.tv/oauth2/token?client_id=${process.env.IGDB_CLIENT_ID}&client_secret=${process.env.IGDB_CLIENT_SECRET}&grant_type=client_credentials`);
