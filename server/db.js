@@ -12,12 +12,6 @@ const pool = new Pool({
   port: 5432,
 });
 
-const findSearch = (async function () {
-  const client1 = await pool.connect();
-  const res = await client1.query('SELECT * FROM "Users"."Users"');
-  client1.release();
-});
-
 export const addUser = async userData => {
   try {
     const client = await pool.connect();
@@ -32,12 +26,21 @@ export const addUser = async userData => {
 export const findByEmail = async userEmail => {
   try {
     const client = await pool.connect();
-    const user = await client.query('SELECT email, password FROM "Users"."Users" WHERE email = $1', [userEmail]);
+    const user = await client.query('SELECT email, password, username FROM "Users"."Users" WHERE email = $1', [userEmail]);
     client.release();
     return user.rows;
-  } catch (error) {
-    
+  } catch {
+    return 'User not found';
   }
 }
 
-findSearch();
+export const getProfileData = async username => {
+  try {
+    const client = await pool.connect();
+    const user = await client.query('SELECT email, username, avatar FROM "Users"."Users" WHERE username = $1', [username]);
+    client.release();
+    return user.rows;
+  } catch {
+    return 'Ooops, something went wrong';
+  }
+}

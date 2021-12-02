@@ -1,6 +1,6 @@
 import express from 'express';
 import { config } from 'dotenv';
-import { addUser, findByEmail } from './db.js';
+import { addUser, findByEmail, getProfileData } from './db.js';
 import cors from 'cors';
 import bcrypt from 'bcrypt';
 import jwt from 'jsonwebtoken';
@@ -19,6 +19,17 @@ const hash = async password => {
 }
 
 const generateAccessToken = email => jwt.sign(email, process.env.ACCESS_TOKEN_SECRET);
+
+const authenticateToken = (req, res, next) => {
+  const authHeader = req.headers['authorization'];
+  const token = authHeader && authHeader.split(' ')[1];
+  if (token === null) return res.status(401);
+  jwt.verify(token, process.env.ACCESS_TOKEN_SECRET, (err, user) => {
+    if (err) return res.status(403);
+    req.user = user;
+    next();
+  })
+};
 
 app.post('/users/join', async (req, res) => {
   const newUser = req.body;
@@ -47,11 +58,20 @@ app.post('/users/login', async (req, res) => {
       return res.status(401).send();
     }
     const accessToken = generateAccessToken({email: user.email});
-    console.log(accessToken);
-    res.status(200).json({ accessToken });
+    res.status(200).json({ accessToken, username: dbUser[0].username });
   } catch {
     res.status(500).send();
   }
- });
+});
+
+app.get('/users/:name', authenticateToken, async (req, res) => {
+  try {
+    const { name } = req.params;
+    const userData = await getProfileData(name);
+    res.status(200).send(userData);
+  } catch {
+    res.status(500).send();
+  }
+});
 
 app.listen(5000, () => console.log('App is running on port 5000'));

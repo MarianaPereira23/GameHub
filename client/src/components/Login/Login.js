@@ -1,10 +1,12 @@
 import React from 'react';
-import { Link } from 'react-router-dom';
+import { Link, useNavigate } from 'react-router-dom';
 import axios from 'axios';
 import './Login.css';
 
 
 const Login = () => {
+  const navigate = useNavigate();
+
   const handleSubmit = async e => {
     e.preventDefault();
 
@@ -13,7 +15,11 @@ const Login = () => {
       password: e.target.children[1].children[0].value
     };
     
-    await axios.post('http://localhost:5000/users/login', user);
+    const data = await axios.post('http://localhost:5000/users/login', user);
+
+    window.localStorage.setItem('Token', data.data.accessToken);
+
+    navigate(`/profile/${data.data.username}`);
   }
 
   return (
