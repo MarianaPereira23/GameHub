@@ -1,12 +1,19 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 import './Login.css';
 
 
 const Login = () => {
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault();
-    console.log(e.target.children[0].children[0].value, e.target.children[1].children[0].value);
+
+    const user = {
+      email: e.target.children[0].children[0].value,
+      password: e.target.children[1].children[0].value
+    };
+    
+    await axios.post('http://localhost:5000/users/login', user);
   }
 
   return (

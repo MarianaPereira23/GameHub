@@ -19,10 +19,25 @@ const findSearch = (async function () {
 });
 
 export const addUser = async userData => {
-  const client = await pool.connect();
-  const user = await client.query('INSERT INTO "Users"."Users" (username, email, password) VALUES ($1, $2, $3) RETURNING *', [userData.username, userData.email, userData.password]);
-  client.release();
-  return user.rows;
+  try {
+    const client = await pool.connect();
+    const user = await client.query('INSERT INTO "Users"."Users" (username, email, password) VALUES ($1, $2, $3) RETURNING *', [userData.username, userData.email, userData.password]);
+    client.release();
+    return user.rows;
+  } catch {
+    return 'User already exists';
+  }
 };
+
+export const findByEmail = async userEmail => {
+  try {
+    const client = await pool.connect();
+    const user = await client.query('SELECT email, password FROM "Users"."Users" WHERE email = $1', [userEmail]);
+    client.release();
+    return user.rows;
+  } catch (error) {
+    
+  }
+}
 
 findSearch();
