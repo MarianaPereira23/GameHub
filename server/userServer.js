@@ -3,6 +3,7 @@ import { config } from 'dotenv';
 import { addUser, findByEmail } from './db.js';
 import cors from 'cors';
 import bcrypt from 'bcrypt';
+import jwt from 'jsonwebtoken';
 
 config();
 
@@ -16,6 +17,8 @@ const hash = async password => {
   const hashedPassword = await bcrypt.hash(password, 10);
   return hashedPassword;
 }
+
+const generateAccessToken = email => jwt.sign(email, process.env.ACCESS_TOKEN_SECRET);
 
 app.post('/users/join', async (req, res) => {
   const newUser = req.body;
@@ -43,7 +46,9 @@ app.post('/users/login', async (req, res) => {
     if (!validate) {
       return res.status(401).send();
     }
-    res.status(200).send();
+    const accessToken = generateAccessToken({email: user.email});
+    console.log(accessToken);
+    res.status(200).json({ accessToken });
   } catch {
     res.status(500).send();
   }
