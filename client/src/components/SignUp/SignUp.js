@@ -1,14 +1,23 @@
 import React from 'react';
 import { Link } from 'react-router-dom';
+import axios from 'axios';
 import './SignUp.css';
 
 const SignUp = () => {
 
-  const handleSubmit = e => {
+  const handleSubmit = async e => {
     e.preventDefault();
-    console.log(e.target.children[0].children[0].value, e.target.children[1].children[0].value);
-    console.log(e.target.children[2].children[0].value, e.target.children[3].children[0].value);
-  }
+
+    // Confirm password check missing
+
+    const newUser = {
+      username: e.target.children[0].children[0].value,
+      email: e.target.children[1].children[0].value,
+      password: e.target.children[2].children[0].value
+    };
+    
+    await axios.post('http://localhost:5000/users/join', newUser);
+  };
 
   return (
     <>

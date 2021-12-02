@@ -18,4 +18,11 @@ const findSearch = (async function () {
   client1.release();
 });
 
+export const addUser = async userData => {
+  const client = await pool.connect();
+  const user = await client.query('INSERT INTO "Users"."Users" (username, email, password) VALUES ($1, $2, $3) RETURNING *', [userData.username, userData.email, userData.password]);
+  client.release();
+  return user.rows;
+};
+
 findSearch();
