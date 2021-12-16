@@ -1,13 +1,14 @@
 import React from 'react';
 import { Route, Routes } from 'react-router-dom';
-import Header from './components/Header/Header';
+import Header from './components/headerComponents/Header/Header';
 import Footer from './components/Footer/Footer';
-import Home from './components/Home/Home';
-import Results from './components/Results/Results';
-import GameDetails from './components/GameDetails/GameDetails';
-import Login from './components/Login/Login';
-import SignUp from './components/SignUp/SignUp';
-import Profile from './components/Profile/Profile';
+import Home from './components/contentComponents/Home/Home';
+import Results from './components/contentComponents/Results/Results';
+import GameDetails from './components/contentComponents/GameDetails/GameDetails';
+import Login from './components/contentComponents/Login/Login';
+import SignUp from './components/contentComponents/SignUp/SignUp';
+import Profile from './components/contentComponents/Profile/Profile';
+import PublicProfile from './components/contentComponents/PublicProfile/PublicProfile';
 import './App.css';
 
 const App = () => {
@@ -22,6 +23,7 @@ const App = () => {
             <Route path="/category/:query" element={<Results />} />
             <Route path="/game/:id" element={<GameDetails />} />
             <Route path="/profile/:name" element={<Profile />} />
+            <Route path="/users/:name" element={<PublicProfile />} />
             <Route path="/login" element={<Login />} />
             <Route path="/join" element={<SignUp />} />
           </Routes>
